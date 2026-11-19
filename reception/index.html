@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>第3回 受付ボード｜SPORTS LINK</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent;}
+body { font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; background: #f4f4f0; color: #161616; padding-bottom: 40px;}
+header { background: #161616; color: #fff; padding: 14px 16px 12px; position: sticky; top: 0; z-index: 10;}
+header.brand { color: #c8f542; font-weight: 800; font-size: 12px; letter-spacing:.12em;}
+header h1 { font-size: 19px; font-weight: 800; margin-top: 2px;}
+header.sub { font-size: 12px; color: #bbb; margin-top: 2px;}
+.summary { display: flex; gap: 8px; margin-top: 10px;}
+.summary.box { flex: 1; background: #262626; border-radius: 10px; padding: 8px 6px; text-align: center;}
+.summary.num { font-size: 17px; font-weight: 800; color: #fff;}
+.summary.num.lime { color: #c8f542;}
+.summary.lab { font-size: 10px; color: #999; margin-top: 1px;}
+main { padding: 12px 12px 0; max-width: 640px; margin: 0 auto;}
+h2 { font-size: 13px; font-weight: 800; margin: 16px 2px 8px; display: flex; align-items: center; gap: 6px;}
+h2.tag { background: #161616; color: #c8f542; font-size: 10px; padding: 2px 7px; border-radius: 99px;}
+h2.tag.warn { background: #b3540a; color: #fff;}
+h2.tag.done { background: #e4e4dc; color: #555;}
+.row { background: #fff; border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; border: 1.5px solid transparent;}
+.row.att-done { border-color: #b9dd45; background: #fbfef2;}
+.row.info { flex: 1; min-width: 0;}
+.row.name { font-size: 16px; font-weight: 800;}
+.row.meta { font-size: 11px; color: #888; margin-top: 1px;}
+.row.note { font-size: 11px; color: #b3540a; font-weight: 700; margin-top: 2px;}
+.btns { display: flex; gap: 6px;}
+button.tgl { border: 1.5px solid #161616; background: #fff; color: #161616; font-size: 13px; font-weight: 800; padding: 9px 12px; border-radius: 99px; cursor: pointer; min-width: 64px;}
+button.tgl.on { background: #161616; color: #c8f542;}
+button.tgl.pay.on { background: #2e7d32; border-color: #2e7d32; color: #fff;}
+.paid-chip { font-size: 11px; font-weight: 800; color: #2e7d32; background: #e6f4e6; padding: 5px 9px; border-radius: 99px; white-space: nowrap;}
+.unpaid-list { background: #fff7ec; border: 1.5px solid #f0c48a; border-radius: 12px; padding: 10px 12px; font-size: 13px;}
+.unpaid-list b { color: #b3540a;}
+.unpaid-list.empty { background: #eef7ee; border-color: #a9d3a9;}
+.addbox,.memobox { background: #fff; border-radius: 12px; padding: 12px; margin-top: 8px;}
+.addbox.ttl,.memobox.ttl { font-size: 12px; font-weight: 800; margin-bottom: 8px;}
+.addbox.flex { display: flex; gap: 6px;}
+input[type="text"], input[type="number"], textarea { font-size: 14px; padding: 9px 10px; border: 1.5px solid #ccc; border-radius: 8px; width: 100%; font-family: inherit;}
+textarea { min-height: 64px; resize: vertical;}
+button.act { background: #161616; color: #c8f542; border: none; font-size: 13px; font-weight: 800; padding: 10px 14px; border-radius: 99px; cursor: pointer; white-space: nowrap;}
+button.act.ghost { background: #fff; color: #161616; border: 1.5px solid #161616;}
+.foot { display: flex; gap: 8px; margin-top: 16px;}
+.foot button { flex: 1;}
+.hint { font-size: 11px; color: #999; margin-top: 10px; line-height: 1.6;}
+</style>
+</head>
+<body>
+<header>
+<div class="brand">SPORTS LINK</div>
+<h1>第3回 受付ボード</h1>
+<div class="sub">2026年11月21日（土）受付15:45〜／レッスン16:30〜18:00</div>
+<div class="summary">
+<div class="box"><div class="num" id="sumAtt">0 / 18</div><div class="lab">出席</div></div>
+<div class="box"><div class="num lime" id="sumPay">¥0</div><div class="lab">徴収合計（目標 ¥9,000）</div></div>
+<div class="box"><div class="num" id="sumUnpaid">6名</div><div class="lab">未徴収</div></div>
+</div>
+</header>
+<main>
+<h2><span class="tag">当日徴収</span>1,500円 × 6名</h2>
+<div id="listPay"></div>
+
+<h2><span class="tag warn">要確認</span>受付で聞く</h2>
+<div id="listCheck"></div>
+
+<h2><span class="tag done">支払済み</span>受付のみ 11名</h2>
+<div id="listPrepaid"></div>
+
+<h2>未徴収リスト</h2>
+<div class="unpaid-list" id="unpaidBox"></div>
+
+<h2>飛び込み参加の追加</h2>
+<div class="addbox">
+<div class="flex">
+<input type="text" id="walkName" placeholder="名前">
+<input type="number" id="walkAmt" placeholder="金額" inputmode="numeric" style="max-width:110px">
+<button class="act" id="walkAdd">追加</button>
+</div>
+<div id="listWalk"></div>
+</div>
+
+<h2>メモ</h2>
+<div class="memobox">
+<textarea id="memo" placeholder="引き継ぎ・気づいたこと（例：白山さんの残り回数の確認結果、第2回の集金内訳など）"></textarea>
+</div>
+
+<div class="foot">
+<button class="act ghost" id="copyBtn">結果をコピー</button>
+<button class="act ghost" id="resetBtn">リセット</button>
+</div>
+<p class="hint">記録はこの端末の中だけに保存されます（サーバーには送られません）。終わったら「結果をコピー」で内容をMuseに送ると、集金の照合に使えます。</p>
+</main>
+<script>
+const ROSTER = {
+pay: [
+{ name: "稲田晴風", meta: "中学2年・排球会", amt: 1500},
+{ name: "三浦結陽", meta: "中学2年・排球会", amt: 1500},
+{ name: "相澤桃香", meta: "中学3年・排球会", amt: 1500},
+{ name: "北岡美奈", meta: "中学3年・戸田排球会", amt: 1500},
+{ name: "加納和華", meta: "小学4〜6年・原山バレーボール少年団", amt: 1500},
+{ name: "比嘉紗", meta: "中学3年・排球会", amt: 1500, note: "第2回から振替"}
+],
+check: [
+{ name: "白山尋都", meta: "小学4〜6年・原山バレーボール", amt: 0, note: "第1回に3回分4,500円支払済み。残り1回が第3回か第4回かを受付で確認"}
+],
+prepaid: [
+{ name: "佐藤優清", meta: "中学1年・VC草加", amt: 0},
+{ name: "橋爪康生", meta: "中学2年・排球会", amt: 0},
+{ name: "中村隆太", meta: "中学3年・排球会", amt: 0},
+{ name: "八巻尚人", meta: "小学1〜3年・戸田ニFC", amt: 0},
+{ name: "八巻啓太", meta: "小学4〜6年・戸田ニFC", amt: 0},
+{ name: "奥田翔喜", meta: "小学4〜6年・原山バレーボールスポーツ少年団", amt: 0},
+{ name: "松山由美", meta: "小学4〜6年・マルガリータ女子", amt: 0},
+{ name: "櫻井統真", meta: "小学4〜6年・原山バレーボールスポーツ少年団", amt: 0},
+{ name: "田中瑛悠", meta: "中学2年", amt: 0, note: "第2回で3回分4,500円支払済み"},
+{ name: "内藤心愛", meta: "中学2年・排球会", amt: 0},
+{ name: "礒沼杏", meta: "中学3年・排球会", amt: 0}
+]
+};
+const KEY = "sl-reception-s3-v1";
+let S = JSON.parse(localStorage.getItem(KEY) || "{}");
+if (!S.checks) S = { checks: {}, walkins: [], memo: ""};
+function save() { localStorage.setItem(KEY, JSON.stringify(S));}
+function chk(name) { return S.checks[name] || (S.checks[name] = { att: false, paid: false});}
+const yen = n => "¥" + n.toLocaleString("ja-JP");
+
+function rowHTML(p, kind) {
+const c = chk(p.name);
+let right = "";
+if (kind === "pay") {
+right = '<button class="tgl pay' + (c.paid? " on": "") + '" data-act="paid" data-name="' + p.name + '">' + (c.paid? "徴収済": "徴収") + "</button>";
+} else if (kind === "prepaid") {
+right = '<span class="paid-chip">支払済み</span>';
+}
+return '<div class="row' + (c.att? " att-done": "") + '">' +
+'<div class="info"><div class="name">' + p.name + '</div><div class="meta">' + p.meta + '</div>' +
+(p.note? '<div class="note">' + p.note + "</div>": "") + "</div>" +
+'<div class="btns"><button class="tgl' + (c.att? " on": "") + '" data-act="att" data-name="' + p.name + '">' + (c.att? "出席✓": "出席") + "</button>" + right + "</div></div>";
+}
+function walkRowHTML(w, i) {
+return '<div class="row' + (w.att? " att-done": "") + '" style="margin-top:8px">' +
+'<div class="info"><div class="name">' + w.name + '</div><div class="meta">飛び込み・' + yen(w.amt) + '</div></div>' +
+'<div class="btns"><button class="tgl' + (w.att? " on": "") + '" data-wact="att" data-i="' + i + '">' + (w.att? "出席✓": "出席") + "</button>" +
+'<button class="tgl pay' + (w.paid? " on": "") + '" data-wact="paid" data-i="' + i + '">' + (w.paid? "徴収済": "徴収") + "</button></div></div>";
+}
+function render() {
+document.getElementById("listPay").innerHTML = ROSTER.pay.map(p => rowHTML(p, "pay")).join("");
+document.getElementById("listCheck").innerHTML = ROSTER.check.map(p => rowHTML(p, "check")).join("");
+document.getElementById("listPrepaid").innerHTML = ROSTER.prepaid.map(p => rowHTML(p, "prepaid")).join("");
+document.getElementById("listWalk").innerHTML = S.walkins.map(walkRowHTML).join("");
+const all = [...ROSTER.pay,...ROSTER.check,...ROSTER.prepaid];
+const att = all.filter(p => chk(p.name).att).length + S.walkins.filter(w => w.att).length;
+const total = all.length + S.walkins.length;
+const paySum = ROSTER.pay.filter(p => chk(p.name).paid).reduce((a, p) => a + p.amt, 0) +
+S.walkins.filter(w => w.paid).reduce((a, w) => a + w.amt, 0);
+const unpaid = ROSTER.pay.filter(p =>!chk(p.name).paid);
+document.getElementById("sumAtt").textContent = att + " / " + total;
+document.getElementById("sumPay").textContent = yen(paySum);
+document.getElementById("sumUnpaid").textContent = unpaid.length + "名";
+const box = document.getElementById("unpaidBox");
+if (unpaid.length === 0) { box.className = "unpaid-list empty"; box.innerHTML = "全員徴収済みです";}
+else { box.className = "unpaid-list"; box.innerHTML = "未徴収：<b>" + unpaid.map(p => p.name).join("、") + "</b>（各1,500円）";}
+}
+document.addEventListener("click", e => {
+const b = e.target.closest("button"); if (!b) return;
+if (b.dataset.act) {
+const c = chk(b.dataset.name);
+c[b.dataset.act] =!c[b.dataset.act]; save(); render();
+} else if (b.dataset.wact) {
+const w = S.walkins[+b.dataset.i];
+w[b.dataset.wact] =!w[b.dataset.wact]; save(); render();
+}
+});
+document.getElementById("walkAdd").addEventListener("click", () => {
+const name = document.getElementById("walkName").value.trim();
+const amt = parseInt(document.getElementById("walkAmt").value || "0", 10);
+if (!name) return;
+S.walkins.push({ name, amt: isNaN(amt)? 0: amt, att: true, paid: false});
+document.getElementById("walkName").value = ""; document.getElementById("walkAmt").value = "";
+save(); render();
+});
+const memoEl = document.getElementById("memo");
+memoEl.value = S.memo || "";
+memoEl.addEventListener("input", () => { S.memo = memoEl.value; save();});
+document.getElementById("resetBtn").addEventListener("click", () => {
+if (confirm("記録を全部リセットしますか？")) { S = { checks: {}, walkins: [], memo: ""}; memoEl.value = ""; save(); render();}
+});
+document.getElementById("copyBtn").addEventListener("click", async () => {
+const all = [...ROSTER.pay,...ROSTER.check,...ROSTER.prepaid];
+const attNames = all.filter(p => chk(p.name).att).map(p => p.name);
+const absNames = all.filter(p =>!chk(p.name).att).map(p => p.name);
+const paidNames = ROSTER.pay.filter(p => chk(p.name).paid).map(p => p.name);
+const unpaidNames = ROSTER.pay.filter(p =>!chk(p.name).paid).map(p => p.name);
+const paySum = ROSTER.pay.filter(p => chk(p.name).paid).reduce((a, p) => a + p.amt, 0) +
+S.walkins.filter(w => w.paid).reduce((a, w) => a + w.amt, 0);
+const text = ["",
+"出席 " + (attNames.length + S.walkins.filter(w => w.att).length) + "名：" + attNames.join("、"),
+"欠席：" + (absNames.join("、") || "なし"),
+"徴収済：" + (paidNames.join("、") || "なし"),
+"未徴収：" + (unpaidNames.join("、") || "なし"),
+"飛び込み：" + (S.walkins.map(w => w.name + "(" + yen(w.amt) + (w.paid? "・徴収済": "・未徴収") + ")").join("、") || "なし"),
+"徴収合計：" + yen(paySum),
+"メモ：" + (S.memo || "なし")].join("\n");
+try { await navigator.clipboard.writeText(text); alert("コピーしました");}
+catch { prompt("コピーできない場合は長押しでコピーしてください", text);}
+});
+render();
+</script>
+</body>
+</html>
