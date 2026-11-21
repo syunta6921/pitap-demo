@@ -2,253 +2,68 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>カフェ・ルーメ｜ピタップ</title>
-<meta name="description" content="カフェ・ルーメのまとめページ。メニュー・予約・LINEポイント・口コミ・Wi-Fiはこちら。">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>炭火焼肉 戸田一ホルモン｜Pitapデモ</title>
 <style>
-  :root{
-    --bg:#171008;           /* 店の世界観カラー（設定で差し替え） */
-    --bg2:#2a1a0e;
-    --accent:#e9a13b;       /* アクセント（設定で差し替え） */
-    --cream:#f7f1e5;
-    --card:#fffdf8;
-    --ink:#221607;
-    --line-green:#06c755;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  body{
-    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
-    background:#0b0704;color:var(--cream);
-  }
-  .page{
-    max-width:430px;margin:0 auto;min-height:100dvh;position:relative;overflow:hidden;
-    background:
-      radial-gradient(120% 60% at 85% -5%, rgba(233,161,59,.28), transparent 60%),
-      radial-gradient(90% 50% at -10% 30%, rgba(233,161,59,.10), transparent 55%),
-      linear-gradient(180deg,var(--bg2),var(--bg) 45%);
-    display:flex;flex-direction:column;
-  }
-  /* ---------- ヘッダー ---------- */
-  .hero{position:relative;height:216px;flex:none}
-  .hero .glow{
-    position:absolute;right:-40px;top:-60px;width:300px;height:300px;border-radius:50%;
-    background:radial-gradient(circle,rgba(255,190,90,.5),rgba(255,190,90,0) 65%);
-  }
-  .hero svg.cup{position:absolute;right:-16px;top:6px;width:236px;height:236px;animation:float 7s ease-in-out infinite}
-  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-  .hero .steam path{stroke-dasharray:30;animation:steam 3.4s ease-in-out infinite}
-  .hero .steam path:nth-child(2){animation-delay:1.1s}
-  @keyframes steam{0%{opacity:0;transform:translateY(4px)}35%{opacity:.7}100%{opacity:0;transform:translateY(-5px)}}
-  .hero .catch{
-    position:absolute;left:22px;bottom:20px;max-width:210px;
-    font-size:16.5px;font-weight:800;line-height:1.65;letter-spacing:.05em;color:#fff;
-    text-shadow:0 2px 14px rgba(0,0,0,.45);
-  }
-  .hero .catch small{display:block;font-size:11px;font-weight:700;letter-spacing:.34em;color:var(--accent);margin-bottom:7px}
-  /* ---------- 店名 ---------- */
-  .brand-row{display:flex;align-items:center;gap:14px;padding:2px 22px 0;position:relative;z-index:2}
-  .logo{
-    width:74px;height:74px;flex:none;border-radius:50%;
-    background:var(--bg);border:2px solid var(--accent);
-    display:flex;align-items:center;justify-content:center;text-align:center;
-    color:var(--cream);font-weight:900;font-size:12.5px;line-height:1.3;letter-spacing:.1em;
-    box-shadow:0 8px 22px rgba(0,0,0,.4);
-  }
-  .store h1{font-size:25px;font-weight:900;letter-spacing:.05em;line-height:1.2;color:#fff}
-  .store p{font-size:11.5px;letter-spacing:.22em;color:rgba(247,241,229,.75);margin-top:4px;text-transform:uppercase}
-  /* ---------- 情報チップ ---------- */
-  .chips{display:flex;gap:8px;padding:16px 20px 2px;flex-wrap:wrap}
-  .chip{
-    display:inline-flex;align-items:center;gap:6px;
-    border:1px solid rgba(247,241,229,.25);border-radius:999px;
-    padding:6px 11px;font-size:11.5px;font-weight:700;color:var(--cream);
-    background:rgba(255,255,255,.05);backdrop-filter:blur(3px);
-  }
-  .chip .dot{width:7px;height:7px;border-radius:50%;background:#3ddc74;box-shadow:0 0 8px #3ddc74}
-  .chip .star{color:var(--accent)}
-  /* ---------- おすすめ ---------- */
-  .pick{
-    margin:16px 18px 0;border-radius:18px;padding:14px 16px;
-    background:linear-gradient(120deg,rgba(233,161,59,.22),rgba(233,161,59,.07));
-    border:1px solid rgba(233,161,59,.45);color:var(--cream);
-    display:flex;align-items:center;gap:13px;
-  }
-  .pick .tag{font-size:10px;font-weight:900;letter-spacing:.18em;color:var(--accent)}
-  .pick b{display:block;font-size:15.5px;margin-top:2px;color:#fff}
-  .pick span{font-size:11.5px;color:rgba(247,241,229,.8)}
-  .pick .price{margin-left:auto;font-size:17px;font-weight:900;color:#fff;white-space:nowrap}
-  /* ---------- ボタン ---------- */
-  .links{padding:16px 18px 4px;display:flex;flex-direction:column;gap:11px}
-  .btn{
-    display:flex;align-items:center;gap:13px;width:100%;
-    background:var(--card);border-radius:17px;padding:14px 17px;
-    text-decoration:none;color:var(--ink);border:0;font:inherit;text-align:left;cursor:pointer;
-    box-shadow:0 10px 24px rgba(0,0,0,.35);
-    opacity:0;transform:translateY(14px);animation:rise .55s cubic-bezier(.2,.8,.25,1) forwards;
-    transition:transform .08s ease;
-  }
-  .btn:active{transform:scale(.98)}
-  .btn:nth-child(1){animation-delay:.05s}.btn:nth-child(2){animation-delay:.12s}
-  .btn:nth-child(3){animation-delay:.19s}.btn:nth-child(4){animation-delay:.26s}
-  .btn:nth-child(5){animation-delay:.33s}.btn:nth-child(6){animation-delay:.40s}
-  @keyframes rise{to{opacity:1;transform:none}}
-  .btn .ic{width:41px;height:41px;flex:none;border-radius:13px;display:flex;align-items:center;justify-content:center}
-  .btn .tx{flex:1;min-width:0}
-  .btn .tx b{display:block;font-size:16px;font-weight:800;letter-spacing:.02em}
-  .btn .tx span{display:block;font-size:11.5px;color:#9a8b76;margin-top:1px}
-  .btn .arw{color:#d8cdb9;font-size:20px;font-weight:700}
-  .btn.primary{background:var(--line-green);color:#fff}
-  .btn.primary .tx span{color:rgba(255,255,255,.85)}
-  .btn.primary .arw{color:rgba(255,255,255,.7)}
-  .ic.menu{background:#fdf0dd}.ic.cal{background:#e7eeff}.ic.star{background:#fdf3d3}
-  .ic.insta{background:#fbe9f5}.ic.wifi{background:#e2f5ec}.ic.linep{background:rgba(255,255,255,.22)}
-  /* ---------- フッター ---------- */
-  .foot{margin-top:auto;padding:22px 18px 26px;text-align:center}
-  .foot .sns{display:flex;justify-content:center;margin-bottom:13px}
-  .foot .sns a{
-    width:42px;height:42px;border-radius:50%;border:1px solid rgba(247,241,229,.3);
-    display:flex;align-items:center;justify-content:center;text-decoration:none;
-  }
-  .brandmark{display:flex;align-items:center;justify-content:center;gap:7px;color:rgba(247,241,229,.85)}
-  .brandmark b{font-size:13px;letter-spacing:.14em}
-  .brandmark small{font-size:10.5px;color:rgba(247,241,229,.55);letter-spacing:.06em}
-  /* ---------- Wi-Fiモーダル ---------- */
-  .modal{position:fixed;inset:0;background:rgba(5,3,1,.55);z-index:10;display:none;align-items:flex-end;justify-content:center}
-  .modal.open{display:flex}
-  .sheet{background:#fffdf8;color:var(--ink);width:100%;max-width:430px;border-radius:22px 22px 0 0;padding:24px 22px 34px;animation:up .22s ease}
-  @keyframes up{from{transform:translateY(24px);opacity:.4}to{transform:none;opacity:1}}
-  .sheet h2{font-size:18px;font-weight:900;margin-bottom:6px}
-  .sheet p{font-size:13px;color:#8a7a63;margin-bottom:16px}
-  .row{display:flex;align-items:center;gap:10px;background:#f4ecdd;border-radius:12px;padding:12px 14px;margin-bottom:10px}
-  .row .k{font-size:11px;color:#9a8b76;width:64px;flex:none;font-weight:700;letter-spacing:.06em}
-  .row .v{flex:1;font-size:15px;font-weight:700;word-break:break-all}
-  .row button{border:0;background:var(--ink);color:#fff;font-weight:800;font-size:12.5px;padding:8px 13px;border-radius:9px;cursor:pointer}
-  .close{width:100%;margin-top:8px;border:0;background:#f4ecdd;border-radius:12px;padding:13px;font-size:15px;font-weight:800;cursor:pointer;color:var(--ink)}
-  @media (prefers-reduced-motion: reduce){
-    .btn{animation:none;opacity:1;transform:none}
-    .hero svg.cup,.hero .steam path{animation:none}
-  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0b0b0b; color:#fff; font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP",sans-serif; padding:28px 18px 40px; }
+  .wrap { max-width:520px; margin:0 auto; }
+  .brand { font-size:13px; letter-spacing:.35em; color:#ff5a2e; font-weight:700; }
+  h1 { font-size:34px; line-height:1.3; margin-top:10px; font-weight:800; }
+  h1 .sm { font-size:19px; display:block; color:#ffb59d; margin-bottom:4px; letter-spacing:.1em; }
+  .tag { margin-top:10px; color:#cfcfcf; font-size:14px; line-height:1.7; }
+  .info { margin-top:22px; border:2px solid #ff5a2e; border-radius:16px; padding:16px 18px; }
+  .info .lbl { color:#ff5a2e; font-size:12px; font-weight:700; letter-spacing:.2em; }
+  .info .row { margin-top:8px; font-size:15px; line-height:1.8; }
+  .info .row b { font-weight:700; }
+  .info .note { color:#a8a8a8; font-size:12.5px; margin-top:6px; line-height:1.7; }
+  nav { margin-top:22px; display:flex; flex-direction:column; gap:12px; }
+  a.card { display:flex; align-items:center; gap:14px; background:#1a1a1a; border:1px solid #333; border-radius:16px; padding:16px; text-decoration:none; color:#fff; }
+  a.card .ic { width:46px; height:46px; flex:0 0 46px; border-radius:12px; background:#262626; display:flex; align-items:center; justify-content:center; }
+  a.card .tx b { display:block; font-size:17px; }
+  a.card .tx span { display:block; color:#a8a8a8; font-size:12.5px; margin-top:2px; }
+  a.card .arw { margin-left:auto; color:#8a8a8a; font-size:22px; }
+  .foot { margin-top:28px; text-align:center; color:#777; font-size:12px; letter-spacing:.25em; }
+  .demo { margin-top:10px; text-align:center; color:#555; font-size:11px; }
 </style>
 </head>
 <body>
-<div class="page">
+<div class="wrap">
+  <div class="brand">SUMIBI YAKINIKU</div>
+  <h1><span class="sm">炭火焼肉</span>戸田一ホルモン</h1>
+  <p class="tag">戸田公園駅徒歩2分。炭火で愉しむ、ホルモン専門店こだわりの焼肉。</p>
 
-  <!-- ヘッダー（実店舗では看板商品・店内の実写に差し替え） -->
-  <div class="hero">
-    <div class="glow"></div>
-    <svg class="cup" viewBox="0 0 200 200">
-      <ellipse cx="100" cy="170" rx="74" ry="10" fill="rgba(0,0,0,.35)"/>
-      <g class="steam" fill="none" stroke="#f7f1e5" stroke-width="4" stroke-linecap="round">
-        <path d="M74 44c-4-8 4-10 0-18"/><path d="M98 46c-4-8 4-10 0-18"/><path d="M122 44c-4-8 4-10 0-18"/>
-      </g>
-      <path d="M33 72h122l-10 76a14 14 0 0 1-14 12H57a14 14 0 0 1-14-12L33 72z" fill="#fffdf8"/>
-      <path d="M155 84h5a20 20 0 0 1 0 40h-11" fill="none" stroke="#fffdf8" stroke-width="10"/>
-      <ellipse cx="94" cy="72" rx="61" ry="10" fill="#7c3f16"/>
-      <ellipse cx="94" cy="71" rx="48" ry="7.5" fill="#c98d4e"/>
-      <path d="M94 76c-9-7-20-1-16 6 2 4 8 5 16 9 8-4 14-5 16-9 4-7-7-13-16-6z" fill="#fff3df" opacity=".9"/>
-    </svg>
-    <div class="catch"><small>SPECIALTY COFFEE</small>自家焙煎コーヒーと<br>焼きたてスイーツの店</div>
+  <div class="info">
+    <div class="lbl">営業時間</div>
+    <div class="row"><b>17:00〜22:00</b>（料理・ドリンク L.O. 21:30）</div>
+    <div class="note">定休日：月曜日／埼玉県戸田市本町2-15-1／JR埼京線 戸田公園駅 徒歩2分</div>
   </div>
 
-  <!-- 店名 -->
-  <div class="brand-row">
-    <div class="logo">CAFE<br>LUMEN</div>
-    <div class="store">
-      <h1>カフェ・ルーメ</h1>
-      <p>Coffee ・ Sweets ・ Lunch</p>
-    </div>
-  </div>
-
-  <!-- 店舗情報（デモ値） -->
-  <div class="chips">
-    <span class="chip"><span class="dot"></span>営業中 9:00–18:00</span>
-    <span class="chip">戸田公園駅 徒歩3分</span>
-    <span class="chip"><span class="star">★</span>4.8（口コミ128件）</span>
-  </div>
-
-  <!-- おすすめ -->
-  <div class="pick">
-    <div>
-      <div class="tag">本日のおすすめ</div>
-      <b>季節のモンブランラテ</b>
-      <span>秋限定・数量限定</span>
-    </div>
-    <div class="price">¥680</div>
-  </div>
-
-  <!-- ボタン列（リンク先は店舗ごとに設定） -->
-  <nav class="links">
-    <a class="btn primary" href="#" onclick="return demo(event)">
-      <span class="ic linep"><svg width="25" height="25" viewBox="0 0 24 24" fill="#fff"><path d="M12 3C6.5 3 2 6.6 2 11.1c0 4 3.6 7.4 8.5 7.9.3.1.8.2.9.5l.4 1.3c.1.3.4.3.6.1l1.6-1.9c.2-.3.5-.4.8-.5 3.6-1 6.2-3.9 6.2-7.4C21 6.6 17.5 3 12 3z"/></svg></span>
-      <span class="tx"><b>LINEでポイントを貯める</b><span>来店ごとにスタンプが貯まります</span></span>
+  <nav>
+    <a class="card" href="https://todaichihorumon.owst.jp/">
+      <span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ff5a2e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
+      <span class="tx"><b>ネット予約・公式サイト</b><span>空席状況の確認とご予約はこちら</span></span>
       <span class="arw">›</span>
     </a>
-    <a class="btn" href="#" onclick="return demo(event)">
-      <span class="ic menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#b97a1e" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span>
-      <span class="tx"><b>メニューを見る</b><span>フード・ドリンク・季節限定</span></span>
+    <a class="card" href="https://www.google.com/maps/search/?api=1&query=%E7%82%AD%E7%81%AB%E7%84%BC%E8%82%89+%E6%88%B8%E7%94%B0%E4%B8%80%E3%83%9B%E3%83%AB%E3%83%A2%E3%83%B3+%E6%88%B8%E7%94%B0%E5%B8%82">
+      <span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ff5a2e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></span>
+      <span class="tx"><b>Googleマップ・口コミ</b><span>場所の確認と口コミはこちら</span></span>
       <span class="arw">›</span>
     </a>
-    <a class="btn" href="#" onclick="return demo(event)">
-      <span class="ic cal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2f6bff" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
-      <span class="tx"><b>予約する</b><span>席のご予約はこちら</span></span>
+    <a class="card" href="https://www.hotpepper.jp/strJ000992492/">
+      <span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ff5a2e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16M4 12h16M4 19h10"/></svg></span>
+      <span class="tx"><b>メニュー・コース</b><span>ホットペッパーグルメで見る</span></span>
       <span class="arw">›</span>
     </a>
-    <a class="btn" href="#" onclick="return demo(event)">
-      <span class="ic star"><svg width="22" height="22" viewBox="0 0 24 24" fill="#f5a623"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"/></svg></span>
-      <span class="tx"><b>Google口コミを書く</b><span>ご感想をお聞かせください</span></span>
+    <a class="card" href="tel:0484334810">
+      <span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ff5a2e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></span>
+      <span class="tx"><b>電話で予約</b><span>048-433-4810</span></span>
       <span class="arw">›</span>
     </a>
-    <a class="btn" href="#" onclick="return demo(event)">
-      <span class="ic insta"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d6249f" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.3" fill="#d6249f" stroke="none"/></svg></span>
-      <span class="tx"><b>Instagramをフォロー</b><span>新メニューやお知らせを配信中</span></span>
-      <span class="arw">›</span>
-    </a>
-    <button class="btn" type="button" onclick="document.getElementById('wifi').classList.add('open')">
-      <span class="ic wifi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0aa06e" stroke-width="2" stroke-linecap="round"><path d="M2.5 9a15 15 0 0 1 19 0M5.5 12.5a10.5 10.5 0 0 1 13 0M8.6 16a6 6 0 0 1 6.8 0"/><circle cx="12" cy="19.4" r="1.4" fill="#0aa06e" stroke="none"/></svg></span>
-      <span class="tx"><b>Wi-Fiにつなぐ</b><span>店内フリーWi-Fiのご案内</span></span>
-      <span class="arw">›</span>
-    </button>
   </nav>
 
-  <div class="foot">
-    <div class="sns">
-      <a href="#" onclick="return demo(event)" aria-label="Instagram">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f7f1e5" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.3" fill="#f7f1e5" stroke="none"/></svg>
-      </a>
-    </div>
-    <div class="brandmark">
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#e9a13b" stroke-width="2.2" stroke-linecap="round"><path d="M5.5 12a9.5 9.5 0 0 1 13 0M8.4 15.4a5.8 5.8 0 0 1 7.2 0"/><circle cx="12" cy="18.6" r="1.5" fill="#e9a13b" stroke="none"/></svg>
-      <b>ピタップ</b><small>Pitap by ねこの手ウェブ制作（デモ）</small>
-    </div>
-  </div>
+  <div class="foot">TODAICHI HORUMON</div>
+  <div class="demo">Pitap（ぴたっぷ）デモページ</div>
 </div>
-
-<!-- Wi-Fiシート -->
-<div class="modal" id="wifi" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="sheet">
-    <h2>店内フリーWi-Fi</h2>
-    <p>ネットワーク名を選んで、パスワードを入力してください。</p>
-    <div class="row"><span class="k">SSID</span><span class="v" id="ssid">CAFE-LUMEN-Guest</span><button type="button" onclick="copyTx('ssid',this)">コピー</button></div>
-    <div class="row"><span class="k">パスワード</span><span class="v" id="wpass">lumen2026</span><button type="button" onclick="copyTx('wpass',this)">コピー</button></div>
-    <button class="close" type="button" onclick="document.getElementById('wifi').classList.remove('open')">閉じる</button>
-  </div>
-</div>
-
-<script>
-/* ============================================================
-   ピタップ（Pitap）店舗設定 — 店ごとにここを差し替える（量産の型）
-   - 店名・業種・世界観カラー／アクセント（CSS変数 --bg / --accent）
-   - ボタンの行き先URL（LINE／メニュー／予約／口コミ／Instagram）
-   - Wi-FiのSSID・パスワード、店舗情報チップ、おすすめ枠
-   カードに書くURLはこのページ1つだけ。変更はページ側だけ。
-   ============================================================ */
-function demo(e){ e.preventDefault(); alert('デモ用ページです。実際の店舗では各ボタンが設定したリンク先に移動します。'); return false; }
-function copyTx(id, btn){
-  var t = document.getElementById(id).textContent;
-  if (navigator.clipboard) { navigator.clipboard.writeText(t); }
-  var old = btn.textContent; btn.textContent = 'コピーしました';
-  setTimeout(function(){ btn.textContent = old; }, 1200);
-}
-</script>
 </body>
 </html>
